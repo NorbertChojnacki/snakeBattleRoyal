@@ -27,7 +27,7 @@
             <input type="number" name="applesNumber" value="4" min="1" max="15" required><br> <!-- number of apples-->
           <label for="boardSize">Board size (min:200, max: 2000)</label>        
             <input type="number" name="boardSize" value="400" min="200" max="2000" required><br> <!-- board size-->
-        <input type="submit" name="create" value="Submit">
+        <input type="submit" name="createGameSubmit" value="Submit">
       </form>
       <br>
 
@@ -35,7 +35,7 @@
         <h3>Join Game</h3>
           <label for="joinGameCode">Enter code game to join</label>
             <input type="text" name="joinGameCode" minlength="6" maxlength="6">
-        <input type="submit" name="join" value="Submit">
+        <input type="submit" name="joinGameSubmit" value="Submit">
       </form>
     </div>
     <script>
@@ -43,28 +43,19 @@
       document.querySelectorAll('form:not(#snake)').forEach(form=>{
         form.addEventListener('submit', e=>{
           e.preventDefault()
-          const game = new FormData(form)
-          console.log(game)
-          if(snake[0].value === ""){
-            snake.setCustomValidity()
-            snake.reportValidity() 
-          }else{
-            let name = snake[0].cloneNode(false)
-            let color = snake[1].cloneNode(false)
-            name.setAttribute('style', 'display:none')
-            color.setAttribute('style', 'display:none')
-            form.appendChild(name)
-            form.appendChild(color)
-            // form.submit()
-           }
-          // fetch(`http://localhost:8080/${e.submitter.name}`, {
-          //   method: "POST",
-          //   body: game 
-          // }).then(result=>{
-
-          // }).catch(err=>{
-          //   console.error(err)
-          // })
+          console.log(snake)
+          // if(snake[0].value === ""){
+          //   snake.setCustomValidity()
+          //   snake.reportValidity() 
+          // }else{
+          //   let name = snake[0].cloneNode(false)
+          //   let color = snake[1].cloneNode(false)
+          //   name.setAttribute('style', 'display:none')
+          //   color.setAttribute('style', 'display:none')
+          //   form.appendChild(name)
+          //   form.appendChild(color)
+          //   form.submit()
+          // }
         })
       })
     </script>
