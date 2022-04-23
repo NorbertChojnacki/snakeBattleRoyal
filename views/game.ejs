@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Snake: Battle Royale</title>
+    <link rel="stylesheet" href="assets/css/childCss.css">
+    <link rel="icon" href="/assets/img/logo.png">
+    <script type="text/javascript">
+    </script>
+    <script src="/socket.io/socket.io.js "></script>
+    <script src="/assets/js/modules/functions.js"></script>
+  </head>
+  <body>
+      <div id="canvasBg">
+        <canvas id="canvas" height="<%=room.boardSize%>px" width="<%=room.boardSize%>px"></canvas>
+      </div>
+      <%= player.name %>
+      <script src="/assets/js/game.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body{
+	padding-top: 1em;
+	background-color: #444;
+	font: 13px Helvetica, Arial;
+}
+
+#canvasBg{
+/*	overflow: hidden;*/
+	margin-top: 100px;
+	margin-left: 100px;
+}
+
+#canvas{
+/*	margin-left: calc(50% - 250px);*/
+}

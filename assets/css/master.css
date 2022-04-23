@@ -1,0 +1,21 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+body{
+   color: #000;
+   font-size: 1.5em;
+   font-family: cursive;
+   background-color: #444;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+}
+
+#mainBox{
+   position: relative;
+   height: 100px;
+   width: 400px;
+}
