@@ -18,28 +18,49 @@ app.use('/assets', express.static(__dirname + '/assets'))
 app.set('view engine', 'ejs')
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false, unset:'destroy', cookie:{maxAge:10000}}))
 
+let server = http.Server(app)
+let io = socket(server)
+
+gameControllerServer(io); 
+
 function gameCheckRequest(req, res, next){
-   if (!['create', 'join'].includes(req.params.game)) res.status(400).end()
+   if (!['create', 'join','snake'].includes(req.params.game)) res.status(400).end()
    next()
 }
 
 function gameCreate(req,res,next){
-   if(req.params.game !== 'create') next()
-
-   fc.createRoomFile(req.body, gameCode =>{
-      res.locals.gameCode = gameCode
-   })
-
+   if(req.params.game === 'create'){
+      fc.createRoomFile(req.body, gameCode =>{
+         res.locals.gameCode = gameCode
+      })
+   } 
    next()
+}
+
+function snakeCreate(req,res,next){
+   if(req.params.game === 'snake'){
+      req.session.player = {
+         name: req.body.snakeName,
+         color: req.body.snakeColor
+      }
+      res.status(200).end()
+   }else{
+      next()
+   }
 }
 
 function gameCheckCode(req, res, next){
    fc.isRoom(req.query?.gameCode).then(room=>{
-         res.locals.room = JSON.parse(room)
+         res.locals.room = room
          next() 
       }).catch(err=>{
           res.send('ooops invalid gameCode or its missing')
       })     
+}
+
+function joinGame(req, res, next){
+   if(req.params.game === 'join') res.locals.gameCode = req.body.joinGameCode;
+   next()
 }
 
 /* get requset handler */
@@ -49,27 +70,18 @@ app.get('/', (req, res) => {
 /* ------------------------------- */
 
 app.get('/snake',gameCheckCode, (req,res)=>{
-   console.log('/snake')
    let player = req.session.player
-   res.render('game', {player})
+   res.render('game')
 })
 
-// encodeURIComponent
 /* post request handler*/
-app.post('/game/:game', gameCheckRequest, gameCreate, upload.none(), (req,res)=>{
-   req.session.player = {
-      id: guid('xxxxx'),
-      name: req.body.snakeName,
-      color: req.body.snakeColor
-   }
-   res.send(`/snake?&gameCode=${res.locals.gameCode}`).end()
+let mid = [gameCheckRequest,snakeCreate, gameCreate, joinGame]
+app.post('/game/:game',upload.none(), mid, (req,res)=>{
+   res.redirect(`/snake?&gameCode=${res.locals.gameCode}`)
 });
 /* ------------------------------- */
 
 
-server = http.Server(app);
+
 server.listen(8080, '127.0.0.1');
 console.log(`listening: 127.0.0.1, on port: 8080`);
-
-let io = socket(server);
-gameControllerServer(io);

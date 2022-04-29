@@ -12,13 +12,7 @@
 			ctx.drawImage(image, 0,0)
 		})
 		.then(()=>{
-			for(let i = 0; i<4; i++){
-				console.log('jestem')
-				socket.emit('getApples', apple =>{
-					console.log(apple)
-				ctx.drawImage(applePicture, apple.x, apple.y)
-			})
-		}
+			
 		})
 })()
 

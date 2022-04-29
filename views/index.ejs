@@ -10,7 +10,7 @@
     <div id="mainBox">
       <h1>Snake</h1><h3>Battle Royale</h3>
       <br>
-      <form id="snake">
+      <form method="post" id="snake">
         <h3>Create your snake</h3>
           <label>Name your snake:</label>
             <input type="text" name="snakeName" value="" required><br>
@@ -19,7 +19,7 @@
         <br>
       </form>
 
-      <form action="/game/create" method="post" id="create">
+      <form method="post" id="create">
         <h3>Create your game</h3>
           <label for="playerNumber">Amount of players (min: 1, max: 10)</label>
             <input type="number" name="playerNumber" value="1" min="1" max="10" required><br> <!-- number of players -->
@@ -31,7 +31,7 @@
       </form>
       <br>
 
-      <form action="/game/join" method="post" id="join">
+      <form method="post" id="join">
         <h3>Join Game</h3>
           <label for="joinGameCode">Enter code game to join</label>
             <input type="text" name="joinGameCode" minlength="6" maxlength="6">
@@ -42,25 +42,19 @@
 
       document.querySelectorAll('form:not(#snake)').forEach(form=>{
         form.addEventListener('submit', e=>{
-          e.preventDefault()
-          // console.log(e)
-          const game = new FormData(create)
-          game.set('snakeName', snake[0].value)
-          game.set('snakeColor', snake[1].value)
+          e.preventDefault();
+          let toSendForm = e.target;
+          toSendForm.action = `/game/${toSendForm.id}`
           
-          //! Trzeba zrobic poprawić przekierowanie na 60 linijce
-
-          fetch(`http://localhost:8080/game/${e.submitter.name}`, {
-            method: "POST",
-            body: game,
-            redirect:"manual"
+          fetch('/game/snake',{
+            method: "post",
+            body: new FormData(snake)
           })
-            .then(res =>res.text())
-            .then(res=>{
-            window.open(`http://localhost:8080${res}`, '_self')
-          }).catch(err=>{
-            console.error(err)
+          .then(res =>res.text())
+          .then(res =>{
+            toSendForm.submit()
           })
+          .catch(err => console.error(err))
         })
       })
     </script>
