@@ -36,19 +36,27 @@ module.exports = {
                         json['currentPlayer'] = value ? json['currentPlayer'] + 1 : json['currentPlayer'] - 1
                         return json
                     })
-                    .then(json => JSON.stringify(json))
                     .then(body => {
-                        fsp.writeFile(filePath, body)
-                        resolve(true)
+                        fsp.writeFile(filePath, JSON.stringify(body))
+                        resolve(body)
                     })
                     .catch(err => reject(err))  
             }else{
-                let json = file;
-                file['currentPlayer'] = value ? json['currentPlayer'] + 1 : json['currentPlayer'] - 1
+                file['currentPlayer'] = value ? file['currentPlayer'] + 1 : file['currentPlayer'] - 1
                 fsp.writeFile(filePath, JSON.stringify(file))
-                    .catch(err => console.error(err))
+                    .then(()=> resolve(file))
+                    .catch(err => reject(err))
             }
             
+        })
+    },
+
+    removeRoomFile(gameCode){
+        let filePath = path.join(__dirname, `/../rooms/${gameCode}.json`)
+        return new Promise((resolve, reject)=>{
+            fsp.rm(filePath)
+                .then(()=> resolve(true))
+                .catch(err => reject(err))
         })
     }
 }

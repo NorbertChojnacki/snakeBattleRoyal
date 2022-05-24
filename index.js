@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path')
-const player = require(path.join(__dirname, '/controllers/modules/SnakeServ.js'));
-const gameControllerServer = require(path.join(__dirname, '/controllers/gameControllerServer.js'));
+// const player = require(path.join(__dirname, '/controllers/modules/SnakeServ.js'));
+// const Food = require(require('path').join(__dirname,'/modules/AppleServ.js'));
 const fc = require(path.join(__dirname, '/controllers/configFileControler.js'));
 const guid = require(path.join(__dirname , '/controllers/modules/GUIDgen.js'))
 const multer = require('multer')
@@ -12,7 +12,7 @@ const fs = require('fs')
 const socket = require('socket.io');
 const session = require('express-session')
 
-app = express()
+const app = express()
 app.use(express.urlencoded({extended:true}))
 app.use('/assets', express.static(__dirname + '/assets'))
 app.set('view engine', 'ejs')
@@ -21,8 +21,7 @@ app.use(session({secret: 'secret', resave: false, saveUninitialized: false, unse
 let server = http.Server(app)
 let io = socket(server)
 
-gameControllerServer(io); 
-
+const player = new Object();
 function gameCheckRequest(req, res, next){
    if (!['create', 'join','snake'].includes(req.params.game)) res.status(400).end()
    next()
@@ -39,10 +38,11 @@ function gameCreate(req,res,next){
 
 function snakeCreate(req,res,next){
    if(req.params.game === 'snake'){
-      req.session.player = {
+      Object.assign(player, {
+         id: guid('xxxxx'),
          name: req.body.snakeName,
          color: req.body.snakeColor
-      }
+      })
       res.status(200).end()
    }else{
       next()
@@ -81,7 +81,49 @@ app.post('/game/:game',upload.none(), mid, (req,res)=>{
 });
 /* ------------------------------- */
 
+app.get('/*', (req,res)=>{
+   res.redirect('/')
+})
 
+io.use((socket, next)=>{
+   const param = new URLSearchParams(socket.handshake.headers.referer).get('gameCode')
+   socket.data.gameCode = param
+   socket.join(param)
+   fc.isRoom(socket.data.gameCode)
+      .then(json => json['playerNumber'] >= json['currentPlayer'] ? [true, json] : [false, json])
+      .then(ret => {
+         fc.editPlayerNumber(socket.data.gameCode, true, ret[1])    
+         socket.data.player = player  
+         if(!ret[0]) socket.disconnect()
+      })
+      .catch(err => console.error(err))
+
+   next()
+})
+
+io.on('connect', socket =>{
+      io.in(socket.data.gameCode).emit('new_player')
+})
+io.on('connection', (socket)=>{
+   // socket.on('getApples', ()=>{
+   //    for(let i = 0; i < 4; i++ ){
+   //       socket.emit('yourApples', new Food().getPosition )
+   //    }
+   // })
+   // socket.on('hello', ()=>{
+   //    io.in(params).emit('player_info', player)
+   // })
+   
+   socket.on('new_player', ()=>{
+      io.to(socket.data.gameCode).emit('check', player.name)
+   })
+
+   socket.on('disconnect', ()=>{
+      fc.editPlayerNumber(socket.data.gameCode, false)
+         .then(data=>{ if(data.currentPlayer === 0) fc.removeRoomFile(params)})
+         .catch(err => console.error(err))
+   });
+});
 
 server.listen(8080, '127.0.0.1');
 console.log(`listening: 127.0.0.1, on port: 8080`);

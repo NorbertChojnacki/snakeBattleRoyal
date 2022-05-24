@@ -1,7 +1,4 @@
-const { fstat } = require('fs');
 const socket = require('socket.io');
-
-const playersId = [];
 
 const Food = require(require('path').join(__dirname,'/modules/AppleServ.js'));
 const fc = require(require('path').join(__dirname, '/configFileControler.js'))
@@ -33,6 +30,8 @@ module.exports = (io) =>{
 
       socket.on('disconnect', ()=>{
          fc.editPlayerNumber(params, false)
+            .then(data=>{ if(data.currentPlayer === 0) fc.removeRoomFile(params)})
+            .catch(err => console.error(err))
       });
    });
 }
