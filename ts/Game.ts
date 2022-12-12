@@ -1,31 +1,22 @@
-class Game extends EventsManager{
+class Game extends EventConstrucor{
 
     Config: Config = {
         appleChanceSpawn: 1,
         gridSize: 10,
-        speedMin: 50,
-        speedMax: 2050,
         boardSizeMax: 20,
         boardSizeMin: 0,
         bodyLengthMin: 1,
         bodyLengthMax: 200,
     }
 
-    Settings: Settings = {
-        speed: 500,
-        bodyLength: 1,
-        bin: 0
-    }
-
-    Player // do wyjebania
-
-    basket = new Object();
+    Basket = new Object();
 
     Board: Board
 
-    constructor(ctx){
+    constructor(){
 
-        super()
+        super();
+
         for(let i = 0; i < this.Config.boardSizeMax; i++){
             this.Board[i] = new Array(this.Config.boardSizeMax);
         }
@@ -36,41 +27,46 @@ class Game extends EventsManager{
         this.Board[fruit.Settings.x][fruit.Settings.y] = fruit;
     }
 
-    filterApples(){
+    callAllFruitsEvent(eventName){
 
-        let x = this.Player.x;
-        let y = this.Player.y
-
-        let fruit = this.Board[x][y];
-
-        if(fruit !== undefined) this.settingsModify(fruit);
-
-        this.Board[x][y] = undefined;
+        for (const fruitName of Object.keys(this.Basket))
+            this.callFruitsEvent(fruitName, eventName);
     }
+
+    callFruitsEvent(fruitName, eventName){
+    
+
+        newFruit.executeEvent(this.Settings, this.Config, eventName, fruitOthers);
+    }
+
+    // filterApples(){
+
+    //     let fruit = this.Board[x][y];
+
+    //     if(fruit !== undefined) this.settingsModify(fruit);
+
+    //     this.Board[x][y] = undefined;
+    // }
 
     drawBoard(){
         
-        this.Settings.ctx.clearRect(0,0,200,200);
+        // this.Settings.ctx.clearRect(0,0,200,200);
         this.drawApples();
-        this.drawPlayers();
     }
 
-    isEndGame(){
+    // isEndGame(){
+    //     let minBoard = this.Config.boardSizeMin;
+    //     let maxBoard = this.Config.boardSizeMax - 1;
 
-        let x = this.Player.x;
-        let y = this.Player.y;
-        let minBoard = this.Config.boardSizeMin;
-        let maxBoard = this.Config.boardSizeMax - 1;
-
-        if(x < minBoard || x > maxBoard || y < minBoard || y > maxBoard){
-            this.callAllFruitsEvent("endGame");
-            return true
-        };
-    }
+    //     if(x < minBoard || x > maxBoard || y < minBoard || y > maxBoard){
+    //         this.callAllFruitsEvent("endGame");
+    //         return true
+    //     };
+    // }
 
     addBasket(fruits: Entity){
 
-        Object.assign(this.basket, fruits);
+        Object.assign(this.Basket, fruits);
 
         for (const Fruit of Object.keys(fruits)) {
 
@@ -82,9 +78,9 @@ class Game extends EventsManager{
 
     generateFruit(fruitName:string, i: number, j: number){
 
-        if(!Object.keys(this.basket).includes(fruitName)) return;
+        if(!Object.keys(this.Basket).includes(fruitName)) return;
 
-        let newFruit = new this.basket[fruitName]();
+        let newFruit = new this.Basket[fruitName]();
         newFruit.setCords(i, j);
         this.addFruit(newFruit);
         
@@ -101,18 +97,13 @@ class Game extends EventsManager{
 
         this.Board.forEach(x => {
             x.forEach(y => {
-                if(y !== undefined) this.drawRect(y);
+                // if(y !== undefined) this.drawRect(y);
             });
         });
     }
 
-    drawPlayers(){
-
-        this.drawRect(this.Player);
-    }
-
-    drawRect({color, x, y}){
-        this.Settings.ctx.fillStyle = color;
-        this.Settings.ctx.fillRect(x * this.Config.gridSize, y * this.Config.gridSize, this.Config.gridSize, this.Config.gridSize); 
-    }
+    // drawRect({color, x, y}){
+    //     this.Settings.ctx.fillStyle = color;
+    //     this.Settings.ctx.fillRect(x * this.Config.gridSize, y * this.Config.gridSize, this.Config.gridSize, this.Config.gridSize); 
+    // }
 }

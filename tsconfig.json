@@ -6,7 +6,7 @@
         "sourceRoot": "ts",
         "sourceMap": true,
         "lib": [
-            "es5", "es6", "ES2017"
+            "es5", "es6", "ES2017", "DOM"
         ]
     },
     "compileOnSave": true

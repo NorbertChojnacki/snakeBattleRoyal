@@ -1,31 +1,22 @@
-type Stats = {
-    [value: string]: any;
-}
+type Identifier = Record<string, string>
 
-type Config = {
-    [value: string]: number;
-}
+type Config = Record<string, number>
 
-type Settings ={
-    [value: string]: number;
-}
+type Settings = Record<string, number>
 
-type EventBox ={
-    [value: string]: EventFunction;
-}
+type EventBox = Record<string, EventFunction>
 
 type EventFunctionOthers = {
-    readonly fruitThis: Entity;
+    readonly entityThis: Entity;
     [value:string] : any
-}
-
+} 
 type EventFunction = (
     GameSettigns: Settings,
     GameConfig: Config,
-    others: EventFunctionOthers) => void
+    others: EventFunctionOthers) => Settings
 
 type Board = [
     row: Array<any>
 ]
 
-type EventName = "collision" | "keyboardUse" | "endGame"
+type EventName = "collision" | "keyboardUse" | "endGame" | "touch"
