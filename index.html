@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="map" width="200" height="200"></canvas>
+    <button onclick="increaseValue()">Zwieksz</button>
+    <script src="Entities.js"></script>
+    <script src="Events.js"></script>
+    <script src="Game.js"></script>
+    <script>
+
+        let ctx = document.querySelector('#map').getContext('2d');
+   
+        const game = new Game(ctx)
+
+        let basket = {
+            Apple
+        }
+        game.addBasket(basket);
+
+        game.spawnApples((i, j, appleSpawn, rand) =>{
+
+            let num1 = Math.random();
+            let spawn = num1 < appleSpawn;
+
+            if(rand < .1 && spawn)
+                game.generateFruit("Apple", i ,j);
+        });
+
+        const snake = new Snake();
+        game.Player = snake;
+
+        game.keyboardMonitor(code => {
+            snake.changeDirection(code);
+        });
+
+        function recurse(){
+
+            game.drawBoard();
+            game.filterApples();
+
+            snake.newPosition();
+
+            game.Player = snake;
+            
+            if(game.isEndGame()) {
+                alert("END GAME");
+                return;
+            }
+
+            setTimeout(()=>{
+                recurse();
+            }, game.Settings.speed);
+        }
+
+        recurse();
+
+    </script>
+</body>
+</html>

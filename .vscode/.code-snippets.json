@@ -1,7 +1,0 @@
-{
-    "fetch":{
-        "scope": "javascript",
-        "prefix": "$fetch",
-        "body:": "fetch(${1|\" \", }, {}) \n .then()\n.catch()"
-    }
-}
