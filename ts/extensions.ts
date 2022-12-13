@@ -6,8 +6,11 @@ type Settings = Record<string, number>
 
 type EventBox = Record<string, EventFunction>
 
+type Board = [
+    row: Array<Entity> 
+]| any
+
 type EventFunctionOthers = {
-    readonly entityThis: Entity;
     [value:string] : any
 } 
 type EventFunction = (
@@ -15,8 +18,4 @@ type EventFunction = (
     GameConfig: Config,
     others: EventFunctionOthers) => Settings
 
-type Board = [
-    row: Array<any>
-]
-
-type EventName = "collision" | "keyboardUse" | "endGame" | "touch"
+type EventName = "collision" | "keyboardUse" | "endGame" | "touch" | "hit" | "move"

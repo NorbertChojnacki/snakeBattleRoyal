@@ -4,16 +4,13 @@ class Entity extends EventConstrucor{
 
     constructor(){
         super()
+        this.Identifier = {}
         this.Settings.x = 1
         this.Settings.y = 1
         this.Identifier.color = "purple"
         this.Identifier.name = "Entity"
     }
-
-    replaceThis(){
-        
-    }
-
+    
     setCords(x,y){
         this.Settings.x = x;
         this.Settings.y = y;

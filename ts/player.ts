@@ -3,36 +3,58 @@ let player = new Entity();
 
 player.setIdentifier('name', 'player');
 player.setIdentifier('id', 'radex12');
+player.setIdentifier('direction', 'x');
 
-player.setEvent('keyboardUse', (GameSettings, GameConfig, others)=>{
+player.setEvent('keyboardUse', function(GameSettings, GameConfig, others){
 
-    let moveX: number;
-    let moveY: number;
-    const {Settings, Identifier} = others.entityThis; 
+    let moveX: number = 0;
+    let moveY: number = 0;
 
         switch(others.code){
             case 37:
                 moveX = -1;
-                Identifier.direction = "x";
+                this.Identifier.direction = "x";
                 break;
             case 38:
                 moveY = -1;
-                Identifier.direction = "y"
+                this.Identifier.direction = "y"
                 break;
             case 39:
                 moveX = 1;
-                Identifier.direction = "x";
+                this.Identifier.direction = "x";
                 break;
             case 40:
                 moveY = 1;
-                Identifier.direction = "y"
+                this.Identifier.direction = "y"
                 break;
         }
 
-        let newX = Settings.x + (Identifier.direction == "x" ? moveX : 0);
-        let newY = Settings.y + (Identifier.direction == "y" ? moveY : 0);
-
-        others.entityThis.setCords(newX, newY);
+        let newX = this.Settings.x + (this.Identifier.direction == "x" ? moveX : 0);
+        let newY = this.Settings.y + (this.Identifier.direction == "y" ? moveY : 0);
+        
+        this.setCords(newX, newY);
 
     return GameSettings;
-})
+});
+
+player.setEvent("move", function(GameSettigns, GameConfig, others){
+
+    let newCords = others.newCords
+
+    if(others.newCords.x > GameConfig.maxboardSize - 1)
+        newCords.x = GameConfig.maxboardSize - 1;
+
+    if(others.newCords.x < GameConfig.minboardSize)
+        newCords.x = GameConfig.minboardSize;
+
+    if(others.newCords.y > GameConfig.maxboardSize - 1)
+        newCords.y = GameConfig.maxboardSize - 1;
+
+    if(others.newCords.y < GameConfig.minboardSize)
+        newCords.y = GameConfig.minboardSize;
+    
+    this.setCords(newCords.x, newCords.y);
+
+
+    return GameSettigns;
+});

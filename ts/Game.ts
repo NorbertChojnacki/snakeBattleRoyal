@@ -1,109 +1,90 @@
 class Game extends EventConstrucor{
 
-    Config: Config = {
-        appleChanceSpawn: 1,
-        gridSize: 10,
-        boardSizeMax: 20,
-        boardSizeMin: 0,
-        bodyLengthMin: 1,
-        bodyLengthMax: 200,
-    }
-
-    Basket = new Object();
-
     Board: Board
+
+    EventList = {}
 
     constructor(){
 
         super();
+        this.setOption("boardSize", 20, 0,20);
+        this.addBoard();
+        this.setOption("gridSize", 10, 10, 10);
 
-        for(let i = 0; i < this.Config.boardSizeMax; i++){
-            this.Board[i] = new Array(this.Config.boardSizeMax);
-        }
-    }
+        document.addEventListener('keydown', event =>{
 
-    addFruit(fruit: Entity){
-
-        this.Board[fruit.Settings.x][fruit.Settings.y] = fruit;
-    }
-
-    callAllFruitsEvent(eventName){
-
-        for (const fruitName of Object.keys(this.Basket))
-            this.callFruitsEvent(fruitName, eventName);
-    }
-
-    callFruitsEvent(fruitName, eventName){
-    
-
-        newFruit.executeEvent(this.Settings, this.Config, eventName, fruitOthers);
-    }
-
-    // filterApples(){
-
-    //     let fruit = this.Board[x][y];
-
-    //     if(fruit !== undefined) this.settingsModify(fruit);
-
-    //     this.Board[x][y] = undefined;
-    // }
-
-    drawBoard(){
-        
-        // this.Settings.ctx.clearRect(0,0,200,200);
-        this.drawApples();
-    }
-
-    // isEndGame(){
-    //     let minBoard = this.Config.boardSizeMin;
-    //     let maxBoard = this.Config.boardSizeMax - 1;
-
-    //     if(x < minBoard || x > maxBoard || y < minBoard || y > maxBoard){
-    //         this.callAllFruitsEvent("endGame");
-    //         return true
-    //     };
-    // }
-
-    addBasket(fruits: Entity){
-
-        Object.assign(this.Basket, fruits);
-
-        for (const Fruit of Object.keys(fruits)) {
-
-            let newFruit = new fruits[Fruit]();
-            Object.assign(this.Config, newFruit.Config);
-            Object.assign(this.Settings, newFruit.Settings);
-        }
-    }
-
-    generateFruit(fruitName:string, i: number, j: number){
-
-        if(!Object.keys(this.Basket).includes(fruitName)) return;
-
-        let newFruit = new this.Basket[fruitName]();
-        newFruit.setCords(i, j);
-        this.addFruit(newFruit);
-        
-    }
-
-    spawnApples(callback){
-
-        for(let i = 0; i < this.Config.boardSizeMax; i++)
-            for(let j = 0; j < this.Config.boardSizeMax; j++)
-                callback(i, j,this.Config.appleChanceSpawn, Math.random());
-    }
-
-    drawApples(){
-
-        this.Board.forEach(x => {
-            x.forEach(y => {
-                // if(y !== undefined) this.drawRect(y);
-            });
+            this.callAllEntitysEvent("keyboardUse", {code: event.keyCode})
         });
     }
 
-    // drawRect({color, x, y}){
-    //     this.Settings.ctx.fillStyle = color;
-    //     this.Settings.ctx.fillRect(x * this.Config.gridSize, y * this.Config.gridSize, this.Config.gridSize, this.Config.gridSize); 
+    addEntity(entity: Entity){
+
+        this.Board[entity.Settings.x][entity.Settings.y] = entity;
+
+        let events = Object.keys(entity.EventBox);
+
+        events.forEach(eventName =>{
+
+            if(!Object.keys(this.EventList).includes(eventName)) this.EventList[eventName] = new Array();
+
+            this.EventList[eventName].push({
+                identifier: entity.Identifier,
+                x: entity.Settings.x,
+                y: entity.Settings.y
+            })
+        })
+    }
+
+    addEntities(entities: Array<Entity>){
+
+        entities.forEach(entity => {
+            this.addEntity(entity);
+        });
+    }
+
+    addBoard(){
+
+        this.Board = new Array(this.Settings.boardSize);
+        for(let i = 0; i < this.Settings.boardSize; i++)
+            this.Board[i] = new Array(this.Settings.boardSize);
+
+    }
+
+    callAllEntitysEvent(eventName, others){
+
+        this.EventList[eventName].forEach((event,index)=>{
+
+            let entity = this.Board[event.x][event.y]
+            let oldCords = entity.getCords();
+            
+            entity.executeEvent(eventName, this.Settings, this.Config, others);
+            let newCords = entity.getCords();
+
+            if(oldCords.x != newCords.x || oldCords.y != newCords.y){
+                entity.executeEvent("move", this.Settings, this.Config, {newCords})
+
+                this.Board[event.x][event.y] = undefined;
+                this.Board[entity.Settings.x][entity.Settings.y] = entity;
+                this.EventList[eventName][index].x = entity.Settings.x
+                this.EventList[eventName][index].y = entity.Settings.y
+            }
+        });
+    }
+
+
+
+    // isEndGame(){
+    //     this.callAllEntitysEvent("endGame", {});
+    //     return true;
+    // }
+
+    // generateEntity(entityName:string, i: number, j: number){
+
+    //     if(!Object.keys(this.Basket).includes(entityName)) return;
+
+    //     let newentity = new this.Basket[entityName]();
+    //     newentity.setCords(i, j);
+    //     this.addentity(newentity);
+        
     // }
 }
