@@ -18,4 +18,4 @@ type EventFunction = (
     GameConfig: Config,
     others: EventFunctionOthers) => Settings
 
-type EventName = "collision" | "keyboardUse" | "endGame" | "touch" | "hit" | "move"
+type EventName = "collision" | "keyboardUse" | "endGame" | "touch" | "hit" | "moveEntity" | "walk"

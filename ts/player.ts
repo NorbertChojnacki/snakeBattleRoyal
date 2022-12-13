@@ -37,7 +37,7 @@ player.setEvent('keyboardUse', function(GameSettings, GameConfig, others){
     return GameSettings;
 });
 
-player.setEvent("move", function(GameSettigns, GameConfig, others){
+player.setEvent("walk", function(GameSettigns, GameConfig, others){
 
     let newCords = others.newCords
 
@@ -54,7 +54,6 @@ player.setEvent("move", function(GameSettigns, GameConfig, others){
         newCords.y = GameConfig.minboardSize;
     
     this.setCords(newCords.x, newCords.y);
-
 
     return GameSettigns;
 });

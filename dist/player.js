@@ -26,11 +26,9 @@ player.setEvent('keyboardUse', function (GameSettings, GameConfig, others) {
     let newX = this.Settings.x + (this.Identifier.direction == "x" ? moveX : 0);
     let newY = this.Settings.y + (this.Identifier.direction == "y" ? moveY : 0);
     this.setCords(newX, newY);
-    console.log(this.getCords());
     return GameSettings;
 });
-player.setEvent("move", function (GameSettigns, GameConfig, others) {
-    console.log({ GameConfig, others });
+player.setEvent("walk", function (GameSettigns, GameConfig, others) {
     let newCords = others.newCords;
     if (others.newCords.x > GameConfig.maxboardSize - 1)
         newCords.x = GameConfig.maxboardSize - 1;
@@ -41,7 +39,6 @@ player.setEvent("move", function (GameSettigns, GameConfig, others) {
     if (others.newCords.y < GameConfig.minboardSize)
         newCords.y = GameConfig.minboardSize;
     this.setCords(newCords.x, newCords.y);
-    console.log(this.getCords());
     return GameSettigns;
 });
 //# sourceMappingURL=player.js.map

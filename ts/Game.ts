@@ -13,7 +13,16 @@ class Game extends EventConstrucor{
 
         document.addEventListener('keydown', event =>{
 
-            this.callAllEntitiesEvent("keyboardUse", {code: event.keyCode})
+            this.callAllEntitiesEvent("keyboardUse", {code: event.keyCode});
+        });
+
+        this.setEvent("moveEntity", function(GameSettings, GameConfig, {entity, event, eventName, index}){
+            
+            this.Board[event.x][event.y] = undefined;
+            this.Board[entity.Settings.x][entity.Settings.y] = entity;
+            this.EventList[eventName][index].x = entity.Settings.x
+            this.EventList[eventName][index].y = entity.Settings.y
+            return GameSettings;
         });
     }
 
@@ -46,8 +55,7 @@ class Game extends EventConstrucor{
 
         this.Board = new Array(this.Settings.boardSize);
         for(let i = 0; i < this.Settings.boardSize; i++)
-            this.Board[i] = new Array(this.Settings.boardSize);
-
+            this.Board[i] = new Array(this.Settings.boardSize).fill(undefined);
     }
 
     callAllEntitiesEvent(eventName, others){
@@ -61,9 +69,9 @@ class Game extends EventConstrucor{
             let newCords = entity.getCords();
 
             if(oldCords.x != newCords.x || oldCords.y != newCords.y)
-                entity.executeEvent("move", this.Settings, this.Config, {newCords})
+                entity.executeEvent("walk", this.Settings, this.Config, {newCords})
 
-            if(this.Board[entity.x][entity.y] !== undefined && this.Board[entity.x][entity.y].Identifier.id !== entity.Identifier.id){
+            if(this.Board[entity.Settings.x][entity.Settings.y] !== undefined && this.Board[entity.Settings.x][entity.Settings.y].Identifier.id !== entity.Identifier.id){
 
                 this.executeEvent("collision", this.Settings, this.Config, {
                     home: this.Board[entity.x][entity.y],
@@ -77,12 +85,14 @@ class Game extends EventConstrucor{
                 entity.executeEvent("touch", this.Settings, this.Config, {
                     home: this.Board[entity.x][entity.y]
                 })
-                
-                this.Board[event.x][event.y] = undefined;
-                this.Board[entity.Settings.x][entity.Settings.y] = entity;
-                this.EventList[eventName][index].x = entity.Settings.x
-                this.EventList[eventName][index].y = entity.Settings.y
             }
+
+            this.executeEvent("moveEntity", this.Settings, this.Config, {
+                event,
+                entity,
+                eventName,
+                index
+            })
             
         });
     }
