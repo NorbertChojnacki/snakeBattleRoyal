@@ -14,7 +14,7 @@ type EventFunctionOthers = {
     [value:string] : any
 } 
 type EventFunction = (
-    GameSettigns: Settings,
+    GameSettings: Settings,
     GameConfig: Config,
     others: EventFunctionOthers) => Settings
 

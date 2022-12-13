@@ -9,6 +9,7 @@ class Entity extends EventConstrucor{
         this.Settings.y = 1
         this.Identifier.color = "purple"
         this.Identifier.name = "Entity"
+        this.Identifier.id = "#12p12p"
     }
     
     setCords(x,y){
