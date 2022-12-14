@@ -1,4 +1,4 @@
-class Entity extends EventConstrucor{
+class EntityConstructor extends EventConstrucor{
 
     Identifier: Identifier
 

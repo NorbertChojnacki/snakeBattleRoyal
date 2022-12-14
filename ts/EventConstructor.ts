@@ -15,8 +15,8 @@ class EventConstrucor{
     setOption(optionName: string, baseValue: number, minValue: number, maxValue: number){
 
         this.Settings[optionName] = baseValue;
-        this.Config[`min${optionName}`] = minValue;
-        this.Config[`max${optionName}`] = maxValue;
+        this.Config[`${optionName}Min`] = minValue;
+        this.Config[`${optionName}Max`] = maxValue;
     }
 
     setEvent(eventName: EventName, eventFunction: EventFunction){

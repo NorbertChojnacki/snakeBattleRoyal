@@ -7,15 +7,17 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="map" width="200" height="200"></canvas>
-    <button onclick="increaseValue()">Zwieksz</button>
+    <canvas id="map" width="100" height="100"></canvas>
+    <button onclick="startGame()">StartGame</button>
+    <button onclick="stopGame()">StopGame</button>
     <script src="dist/EventConstructor.js"></script>
+    <script src="dist/BoardManager.js"></script>
     <script src="dist/Entity.js"></script>
     <script src="dist/Game.js"></script>
     <script src="dist/player.js"></script>
     <script>
 
-        // let ctx = document.querySelector('#map').getContext('2d');
+        let ctx = document.querySelector('#map');
    
         // const game = new Game(ctx)
 
@@ -61,8 +63,27 @@
 
         // recurse();
 
-        const game = new Game();
+        const ev = document.createEvent('Event');
+        ev.initEvent("stopGame", true,true);
+
+        const game = new Game(ctx);
         game.addEntity(player);
+
+        function stopGame(){
+            document.dispatchEvent(ev);
+        }
+
+        function startGame(){
+
+            game.drawBoard();
+
+            let newGame = setTimeout(startGame, 10);
+
+            document.addEventListener("stopGame",()=>{
+                clearTimeout(newGame);
+            })
+        }
+        
     </script>
 </body>
 </html>

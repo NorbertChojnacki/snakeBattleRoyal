@@ -1,9 +1,21 @@
 
-let player = new Entity();
+let player = new EntityConstructor();
 
 player.setIdentifier('name', 'player');
 player.setIdentifier('id', 'radex12');
 player.setIdentifier('direction', 'x');
+player.setOption("bodyLength", 1, 1, 20);
+player.setEvent("touch", function(GameSettings, GameConfig, others){
+
+    switch(others.home){
+        case("apple"):
+            if(this.Settings.bodyLength < this.Config.maxbodyLength)
+            this.Settings.bodyLength++;
+        break;
+    }
+
+    return GameSettings;
+})
 
 player.setEvent('keyboardUse', function(GameSettings, GameConfig, others){
 
@@ -57,3 +69,4 @@ player.setEvent("walk", function(GameSettigns, GameConfig, others){
 
     return GameSettigns;
 });
+
