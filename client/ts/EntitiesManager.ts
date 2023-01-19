@@ -1,6 +1,6 @@
 class EntitiesManager extends EventConstrucor{
 
-    Board: Board
+    Board: GameBoard
 
     EventList = {}
 

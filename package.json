@@ -1,0 +1,26 @@
+{
+  "name": "snakebattleroyal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node initEnv.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NorbertChojnacki/snakeBattleRoyal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NorbertChojnacki/snakeBattleRoyal/issues"
+  },
+  "homepage": "https://github.com/NorbertChojnacki/snakeBattleRoyal#readme",
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}

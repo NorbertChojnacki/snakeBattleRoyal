@@ -1,3 +1,4 @@
+*/node_modules/
 node_modules/
-rooms/
-dist/*
+*/dist/*
+database/rooms.json
