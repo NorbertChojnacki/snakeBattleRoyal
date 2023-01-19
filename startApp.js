@@ -9,7 +9,10 @@ const controller = new AbortController();
 const { signal } = controller;
 
 const database = fork('./database/index.js', { env: process.env, signal, stdio: 'pipe'});
-// const subproject2 = fork('subproject2/index.js', { env: process.env });
+const client = fork('./client/index.js', { env: process.env, signal, stdio: 'pipe'});
 
 database.stdout.on('data', data => console.log(`${colors.yellow('Database:')}\n${data}`));
 database.stderr.on('data', err => console.log(`${colors.red('Database:')}\n${err}`));
+
+client.stdout.on('data', data => console.log(`${colors.yellow('Client:')}\n${data}`));
+client.stderr.on('data', err => console.log(`${colors.red('Client:')}\n${err}`));

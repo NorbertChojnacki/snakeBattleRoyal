@@ -8,8 +8,11 @@ const middleware = jsonServer.defaults();
 server.use(rooms);
 server.use(middleware);
 
-server.listen(process.env.DATABASE_PORT, process.env.DATABASE_HOST, ()=>{
+const PORT = process.env.DATABASE_PORT || 3000;
+const HOST = process.env.DATABASE_HOST || "127.0.0.1";
+
+server.listen(PORT, HOST, ()=>{
     console.log(`Database server is listening on: \n
-    PORT: ${process.env.DATABASE_PORT}\n
-    HOST: ${process.env.DATABASE_HOST}`)
+    PORT: ${PORT}\n
+    HOST: ${HOST}`)
 });
