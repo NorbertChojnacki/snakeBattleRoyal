@@ -1,5 +1,14 @@
 {
   "rooms": [
-    
+    {
+      "title": "test",
+      "options": "test",
+      "id": 1
+    },
+    {
+      "title": "test",
+      "options": "test",
+      "id": 2
+    }
   ]
 }
